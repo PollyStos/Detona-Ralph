@@ -28,7 +28,6 @@ function updateLiveUI(){
         const img = document.createElement("img");
         img.src = "./src/images/hart.svg";
         img.alt = "vidas";
-        img.width = 30;
         state.view.live.appendChild(img);
     }
 }
