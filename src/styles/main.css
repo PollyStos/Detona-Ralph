@@ -1,0 +1,82 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    background: url(../images/wall.png);
+}
+
+.menu {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    height: 100px;
+    width: 100vw;
+    background-image: linear-gradient(#222222,#000000) ;
+    color: rgb(255, 164, 164);
+}
+
+.menu-time,.menu-score{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.second {
+    margin-left: 10px;
+}
+
+.panel {
+    margin: 3rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 20px solid brown;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.411);
+}
+
+.square {
+    width: 150px;
+    height: 150px;
+    background-color: rgb(214, 158, 161);
+    border: 1px solid rgb(131, 79, 79);
+    box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.enemy {
+    background: url(../images/ralph.png) rgb(153, 107, 107)center center no-repeat;
+    background-size: cover;
+
+}
+
+.menu-lives {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#lives-container img{
+    margin-left: 5px;
+}
+
+footer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 100vw;
+    background-image: linear-gradient(#000000 ,#1d1d1d);
+    color: antiquewhite;
+}
+.sidewalk{
+    width: 100vw;
+    height: 30px;
+    background-image: linear-gradient(#757474 ,#979696);
+    border-bottom: 25px ridge #979696;
+
+}
+.text{
+    margin: auto;
+}
