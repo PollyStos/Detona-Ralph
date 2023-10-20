@@ -44,7 +44,7 @@ function playSound(audioName) {
 }
 
 function countDown() {
-    state.values.currentTime--;
+    // state.values.currentTime--;
     state.view.timeLeft.textContent = state.values.currentTime;
 
     if (state.values.currentTime <= 0) {
