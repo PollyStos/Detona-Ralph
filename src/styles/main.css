@@ -16,7 +16,7 @@
     color: rgb(255, 164, 164);
 }
 
-.menu-time,.menu-score{
+.hub-time,.hub-score{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -51,7 +51,7 @@
 
 }
 
-.menu-lives {
+.hub-lives {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -102,10 +102,10 @@ footer{
         height: 100px;
     }
 
-    .menu-time,.menu-score{
+    .hub-time,.hub-score{
         font-size: 10px;
     }
-    .menu-lives img{
+    .hub-lives img{
         width: 30px;
         height: 30px;
     }
@@ -120,10 +120,10 @@ footer{
         height: 80px;
     }
 
-    .menu-time,.menu-score{
+    .hub-time,.hub-score{
         font-size: 10px;
     }
-    .menu-lives img{
+    .hub-lives img{
         width: 30px;
         height: 30px;
     }
@@ -133,14 +133,14 @@ footer{
 }
 
 @media (max-height:700px) {
-    .menu{
+    .hub{
         height: 70px;
     }
     
 }
 
 @media (max-height:450px) {
-    .menu{
+    .hub{
         height: 55px;
     }
     .square{
@@ -148,10 +148,10 @@ footer{
         height: 80px;
     }
 
-    .menu-time,.menu-score{
+    .hub-time,.hub-score{
         font-size: 20px;
     }
-    .menu-lives img{
+    .hub-lives img{
         height: 40px;
     }
     #lives-container img{
@@ -165,10 +165,10 @@ footer{
         height: 40px;
     }
 
-    .menu-time,.menu-score{
+    .hub-time,.hub-score{
         font-size: 10px;
     }
-    .menu-lives img{
+    .hub-lives img{
         width: 30px;
         height: 30px;
     }

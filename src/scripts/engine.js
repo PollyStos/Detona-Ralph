@@ -1,4 +1,5 @@
 let speed = 1000;
+let msg = '';
 
 const state = {
     view: {
@@ -6,14 +7,15 @@ const state = {
         enemy: document.querySelector(".enemy"),
         timeLeft: document.querySelector("#time-left"),
         score: document.querySelector("#score"),
-        live:document.querySelector("#lives-container"),
+        live: document.querySelector("#lives-container"),
+        
     },
     values: {
         gameVelocity: 1000,
         hitPosition: 0,
         result: 0,
-        currentTime: 60,
-        countlive:3,
+        currentTime: 5,
+        countlive: 3,
     },
     actions: {
         timeId: setInterval(randomSquare, speed),
@@ -21,10 +23,10 @@ const state = {
     }
 };
 
-function updateLiveUI(){
-    state.view.live.innerHTML="";
+function updateLiveUI() {
+    state.view.live.innerHTML = "";
 
-    for(let i=0; i<state.values.countlive;i++){
+    for (let i = 0; i < state.values.countlive; i++) {
         const img = document.createElement("img");
         img.src = "./src/images/hart.svg";
         img.alt = "vidas";
@@ -32,7 +34,7 @@ function updateLiveUI(){
     }
 }
 
-function velocity(){
+function velocity() {
     clearInterval(state.actions.timeId);
     state.actions.timeId = setInterval(randomSquare, speed);
 }
@@ -44,19 +46,21 @@ function playSound(audioName) {
 }
 
 function countDown() {
-    // state.values.currentTime--;
+    state.values.currentTime--;
     state.view.timeLeft.textContent = state.values.currentTime;
 
     if (state.values.currentTime <= 0) {
         clearInterval(state.actions.countDownTimeId);
         clearInterval(state.actions.timeId);
-        alert("time's up! O seu resultado foi: " + state.values.result);
+        msg = 'Times Up';
+        endGame(msg);
     }
 
     if (state.values.countlive <= 0) {
         clearInterval(state.actions.countDownTimeId);
         clearInterval(state.actions.timeId);
-        alert("Game over! O seu resultado foi: " + state.values.result);
+        msg = 'Game Over';
+        endGame(msg);
     }
 }
 
@@ -77,16 +81,16 @@ function addListenerHitBox() {
         square.addEventListener("mousedown", () => {
             if (square.id === state.values.hitPosition) {
                 state.values.result++;
-                speed-=2;
+                speed -= 2;
                 state.view.score.textContent = state.values.result;
                 state.values.hitPosition = null;
-                state.values.currentTime+=2;
+                state.values.currentTime += 2;
                 state.view.squares.forEach((square) => {
                     square.classList.remove("enemy");
                 });
                 playSound("hit");
                 velocity();
-                
+
             } else {
                 state.values.countlive--;
                 updateLiveUI();
@@ -102,3 +106,4 @@ function init() {
 }
 
 init();
+
