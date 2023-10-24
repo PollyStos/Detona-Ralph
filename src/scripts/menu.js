@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const popup = document.getElementById("popup");
-    const menu = document.querySelector(".menu");
+    const menu = document.querySelector("#menu");
     const iniciarLink = document.querySelector("#start");
 
     // Mostra o pop-up automaticamente
@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault(); // Impede o link de redirecionar para outra página (comportamento padrão)
         popup.style.display = "none";
         menu.classList.remove("menu");
+        startGame();
     });
 });
 // Obtém o botão e o pop-up pelo ID
