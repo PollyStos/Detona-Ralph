@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     const popup = document.getElementById("popup");
-    const menu = document.querySelector("#menu");
+    const menu = document.querySelector(".menu");
     const iniciarLink = document.querySelector("#start");
 
     // Mostra o pop-up automaticamente
