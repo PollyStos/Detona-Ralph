@@ -33,9 +33,9 @@
     border-radius: 25px;
 }
 
-.point{
+.points{
     display: flex;
 }
-.point h4{
+.points h4{
     padding: 0 20px;
 }

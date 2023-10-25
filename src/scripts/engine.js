@@ -1,5 +1,46 @@
 let speed = 1000;
 let msg = '';
+
+const game = {
+    popup: document.getElementById("popup"),
+    menu: document.querySelector(".menu"),
+    iniciarLink: document.querySelector("#start"),
+    h1Element: document.querySelector(".title"),
+    openButton: document.getElementById("openPopup"),
+    score:document.getElementById("point"),
+    record:document.getElementById("record"),
+}
+document.addEventListener("DOMContentLoaded", function () {
+
+    game.popup.style.display = "flex";
+    game.menu.classList.add("menu");
+
+    // Adiciona um ouvinte de eventos para fechar o pop-up quando "Iniciar" é clicado
+    game.iniciarLink.addEventListener("click", function (e) {
+        e.preventDefault(); // Impede o link de redirecionar para outra página (comportamento padrão)
+        game.popup.style.display = "none";
+        game.menu.classList.remove("menu");
+
+        // Verifica se o elemento h1 tem um filho do tipo p e remove-o, se existir
+        // if (game.h1Element.querySelector("p")) {
+        //     game.h1Element.removeChild(game.h1Element.querySelector("p"));
+        // }
+        startGame();
+    });
+});
+
+// Adiciona um ouvinte de eventos para abrir o pop-up
+// openButton.addEventListener("click", () => {
+//     game.popup.style.display = "flex";
+// });
+
+// Adiciona um ouvinte de eventos para fechar o pop-up
+// popup.addEventListener("click", (e) => {
+//     if (e.target === popup) {
+//         game.popup.style.display = "none";
+//     }
+// });
+
 function startGame(){
 
     const state = {
@@ -14,7 +55,7 @@ function startGame(){
             gameVelocity: 1000,
             hitPosition: 0,
             result: 0,
-            currentTime: 3,
+            currentTime: 60,
             countlive:3,
         },
         actions: {
@@ -52,15 +93,17 @@ function startGame(){
         if (state.values.currentTime <= 0) {
             clearInterval(state.actions.countDownTimeId);
             clearInterval(state.actions.timeId);
+            state.view.score.textContent = 0;
             msg = "Time's Up";
-            endGame(msg);
+            endGame(msg,state.values.result);
         }
     
         if (state.values.countlive <= 0) {
             clearInterval(state.actions.countDownTimeId);
             clearInterval(state.actions.timeId);
+            state.view.score.textContent = 0;
             msg = "Game over";
-            endGame(msg);
+            endGame(msg,state.values.result);
         }
     }
     
@@ -105,4 +148,15 @@ function startGame(){
             console.log(state.values.result);
         }
     init();
+}
+
+function endGame(msg,result) {
+    let pElement = document.createElement("p");
+    pElement.textContent = `${msg}!`;
+    game.h1Element.appendChild(pElement);
+    point.textContent = result;
+
+
+    game.popup.style.display = "flex";
+    game.menu.classList.add("menu");
 }
