@@ -1,3 +1,5 @@
+// Seleciona o elemento <h1> dentro do elemento com o ID "popup"
+var h1Element = document.querySelector(".title");
 document.addEventListener("DOMContentLoaded", function () {
     const popup = document.getElementById("popup");
     const menu = document.querySelector(".menu");
@@ -12,6 +14,11 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault(); // Impede o link de redirecionar para outra página (comportamento padrão)
         popup.style.display = "none";
         menu.classList.remove("menu");
+
+        // Verifica se o elemento h1 tem um filho do tipo p e remove-o, se existir
+        if (h1Element.querySelector("p")) {
+            h1Element.removeChild(h1Element.querySelector("p"));
+        }
         startGame();
     });
 });
@@ -32,22 +39,22 @@ popup.addEventListener("click", (e) => {
 });
 
 function endGame(msg) {
-    // Seleciona o elemento <h1> dentro do elemento com o ID "popup"
-    var h1Element = document.querySelector("#popup h1");
+
 
     // Cria um novo elemento de parágrafo
     var pElement = document.createElement("p");
     const popup = document.getElementById("popup");
     const menu = document.querySelector(".menu");
 
+    console.log(msg);
     // Define o conteúdo do parágrafo (opcional)
-    pElement.textContent = "Este é um novo parágrafo adicionado via JavaScript.";
+    pElement.textContent = `${msg}!`;
 
     // Anexa o parágrafo como um filho do elemento <h1>
     h1Element.appendChild(pElement);
 
-    popup.style.display = "none";
-        menu.classList.remove("menu");
+    popup.style.display = "flex";
+    menu.classList.add("menu");
 
     console.log(`entrei aqui e msg é ${msg}`);
 }
