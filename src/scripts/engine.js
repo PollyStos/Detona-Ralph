@@ -1,5 +1,6 @@
 let speed = 1000;
 let msg = '';
+let restart = false;
 
 const game = {
     popup: document.getElementById("popup"),
@@ -21,10 +22,9 @@ document.addEventListener("DOMContentLoaded", function () {
         game.popup.style.display = "none";
         game.menu.classList.remove("menu");
 
-        // Verifica se o elemento h1 tem um filho do tipo p e remove-o, se existir
-        // if (game.h1Element.querySelector("p")) {
-        //     game.h1Element.removeChild(game.h1Element.querySelector("p"));
-        // }
+        if (game.h1Element.querySelector("p")) {
+            game.h1Element.removeChild(game.h1Element.querySelector("p"));
+        }
         startGame();
     });
 });
@@ -93,7 +93,6 @@ function startGame(){
         if (state.values.currentTime <= 0) {
             clearInterval(state.actions.countDownTimeId);
             clearInterval(state.actions.timeId);
-            state.view.score.textContent = 0;
             msg = "Time's Up";
             endGame(msg,state.values.result);
         }
@@ -101,7 +100,6 @@ function startGame(){
         if (state.values.countlive <= 0) {
             clearInterval(state.actions.countDownTimeId);
             clearInterval(state.actions.timeId);
-            state.view.score.textContent = 0;
             msg = "Game over";
             endGame(msg,state.values.result);
         }
@@ -151,12 +149,11 @@ function startGame(){
 }
 
 function endGame(msg,result) {
+    game.popup.style.display = "flex";
+    game.menu.classList.add("menu");
     let pElement = document.createElement("p");
     pElement.textContent = `${msg}!`;
     game.h1Element.appendChild(pElement);
     point.textContent = result;
-
-
-    game.popup.style.display = "flex";
-    game.menu.classList.add("menu");
+    state.view.score.textContent = 0;
 }
