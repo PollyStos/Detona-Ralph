@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // });
 
 function startGame() {
-    let speed = 1000;
+    // let speed = 1000;
     const state = {
         view: {
             squares: document.querySelectorAll(".square"),
@@ -61,7 +61,7 @@ function startGame() {
             countlive: 3,
         },
         actions: {
-            timeId: setInterval(randomSquare, speed),
+            timeId: setInterval(randomSquare, 1000),
             countDownTimeId: setInterval(countDown, 1000),
         }
     };
@@ -77,11 +77,11 @@ function startGame() {
         }
     }
 
-    function velocity() {
-        speed -= 2;
-        clearInterval(state.actions.timeId);
-        state.actions.timeId = setInterval(randomSquare, speed);
-    }
+    // function velocity() {
+    //     speed -= 2;
+    //     clearInterval(state.actions.timeId);
+    //     state.actions.timeId = setInterval(randomSquare, speed);
+    // }
 
     function playSound(audioName) {
         let audio = new Audio(`/src/sounds/${audioName}.m4a`);
@@ -98,6 +98,8 @@ function startGame() {
             clearInterval(state.actions.timeId);
             msg = "Time's Up";
             state.view.score.textContent = 0;
+            state.values.countlive = 3;
+            // speed = 1000;
             endGame(msg, state.values.result);
         }
 
@@ -106,6 +108,8 @@ function startGame() {
             clearInterval(state.actions.timeId);
             msg = "Game over";
             state.view.score.textContent = 0;
+            state.values.countlive = 3;
+            // speed = 1000;
             endGame(msg, state.values.result);
         }
     }
@@ -126,18 +130,18 @@ function startGame() {
         state.view.squares.forEach((square) => {
             square.addEventListener("mousedown", () => {
                 if (square.id === state.values.hitPosition) {
+                    console.log(`state.values.hitPosition ${state.values.hitPosition} square.id ${square.id} é igual? ${square.id === state.values.hitPosition}`);
                     state.values.result++;
-                    
                     state.view.score.textContent = state.values.result;
                     state.values.hitPosition = null;
-                    state.values.currentTime += 2;
+                    state.values.currentTime += 1;
                     state.view.squares.forEach((square) => {
                         square.classList.remove("enemy");
                     });
                     playSound("hit");
-                    velocity();
-
-                } else {
+                    // velocity();
+                } else if (square.id =! state.values.hitPosition) {
+                    console.log(`state.values.hitPosition ${state.values.hitPosition} square.id ${square.id} é igual? ${square.id === state.values.hitPosition}`);
                     state.values.countlive--;
                     updateLiveUI();
                 }
@@ -154,9 +158,8 @@ function startGame() {
 }
 
 function endGame(msg, result) {
-    meuRecord = meuRecord+result;
-    alert(meuRecord);
-        game.popup.style.display = "flex";
+    meuRecord = meuRecord + result;
+    game.popup.style.display = "flex";
     game.menu.classList.add("menu");
     let pElement = document.createElement("p");
     pElement.textContent = `${msg}!`;
