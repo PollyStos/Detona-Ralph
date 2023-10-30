@@ -1,31 +1,34 @@
-
 let msg = '';
-let meuRecord = 0;
 
 let restart = false;
 
 const game = {
-    popup: document.getElementById("popup"),
-    menu: document.querySelector(".menu"),
-    iniciarLink: document.querySelector("#start"),
-    h1Element: document.querySelector(".title"),
-    openButton: document.getElementById("openPopup"),
-    score: document.getElementById("point"),
-    record: document.getElementById("record"),
+    view: {
+        popup: document.getElementById("popup"),
+        menu: document.querySelector(".menu"),
+        iniciarLink: document.querySelector("#start"),
+        h1Element: document.querySelector(".title"),
+        openButton: document.getElementById("openPopup"),
+        score: document.getElementById("point"),
+        record: document.getElementById("record"),
+    },
+    value: {
+        meuRecord: 0,
+    }
 }
 document.addEventListener("DOMContentLoaded", function () {
 
-    game.popup.style.display = "flex";
-    game.menu.classList.add("menu");
+    game.view.popup.style.display = "flex";
+    game.view.menu.classList.add("menu");
 
     // Adiciona um ouvinte de eventos para fechar o pop-up quando "Iniciar" é clicado
-    game.iniciarLink.addEventListener("click", function (e) {
+    game.view.iniciarLink.addEventListener("click", function (e) {
         e.preventDefault(); // Impede o link de redirecionar para outra página (comportamento padrão)
-        game.popup.style.display = "none";
-        game.menu.classList.remove("menu");
+        game.view.popup.style.display = "none";
+        game.view.menu.classList.remove("menu");
 
-        if (game.h1Element.querySelector("p")) {
-            game.h1Element.removeChild(game.h1Element.querySelector("p"));
+        if (game.view.h1Element.querySelector("p")) {
+            game.view.h1Element.removeChild(game.view.h1Element.querySelector("p"));
         }
         startGame();
     });
@@ -43,8 +46,10 @@ document.addEventListener("DOMContentLoaded", function () {
 //     }
 // });
 
+
+// let speed = 1000;
+
 function startGame() {
-    // let speed = 1000;
     const state = {
         view: {
             squares: document.querySelectorAll(".square"),
@@ -77,11 +82,11 @@ function startGame() {
         }
     }
 
-    // function velocity() {
-    //     speed -= 2;
-    //     clearInterval(state.actions.timeId);
-    //     state.actions.timeId = setInterval(randomSquare, speed);
-    // }
+    function velocity() {
+        speed -= 2;
+        clearInterval(state.actions.timeId);
+        state.actions.timeId = setInterval(randomSquare, speed);
+    }
 
     function playSound(audioName) {
         let audio = new Audio(`/src/sounds/${audioName}.m4a`);
@@ -98,7 +103,7 @@ function startGame() {
             clearInterval(state.actions.timeId);
             msg = "Time's Up";
             state.view.score.textContent = 0;
-            state.values.countlive = 3;
+            // state.values.countlive = 3;
             // speed = 1000;
             endGame(msg, state.values.result);
         }
@@ -108,7 +113,7 @@ function startGame() {
             clearInterval(state.actions.timeId);
             msg = "Game over";
             state.view.score.textContent = 0;
-            state.values.countlive = 3;
+            // state.values.countlive = 3;
             // speed = 1000;
             endGame(msg, state.values.result);
         }
@@ -121,29 +126,31 @@ function startGame() {
 
         let randomNumber = Math.floor(Math.random() * 9);
         let randomSquare = state.view.squares[randomNumber];
-        randomSquare.classList.add("enemy");
         state.values.hitPosition = randomSquare.id;
+        randomSquare.classList.add("enemy");
     }
 
 
     function addListenerHitBox() {
         state.view.squares.forEach((square) => {
             square.addEventListener("mousedown", () => {
-                if (square.id === state.values.hitPosition) {
-                    console.log(`state.values.hitPosition ${state.values.hitPosition} square.id ${square.id} é igual? ${square.id === state.values.hitPosition}`);
-                    state.values.result++;
-                    state.view.score.textContent = state.values.result;
-                    state.values.hitPosition = null;
-                    state.values.currentTime += 1;
-                    state.view.squares.forEach((square) => {
-                        square.classList.remove("enemy");
-                    });
-                    playSound("hit");
-                    // velocity();
-                } else if (square.id =! state.values.hitPosition) {
-                    console.log(`state.values.hitPosition ${state.values.hitPosition} square.id ${square.id} é igual? ${square.id === state.values.hitPosition}`);
-                    state.values.countlive--;
-                    updateLiveUI();
+                switch (square.id === state.values.hitPosition) {
+                    case true:
+                        console.log(`state.values.hitPosition ${state.values.hitPosition} square.id ${square.id} é igual? ${square.id === state.values.hitPosition}`);
+                        state.values.result++;
+                        state.view.score.textContent = state.values.result;
+                        state.values.hitPosition = null;
+                        state.values.currentTime += 1;
+                        state.view.squares.forEach((square) => {
+                            square.classList.remove("enemy");
+                        });
+                        playSound("hit");
+                        console.log(`state.values.countlive-- ${state.values.countlive--} `);
+                        break;
+                    case false:    // velocity();
+                        state.values.countlive--;
+                        updateLiveUI();
+                        break;
                 }
             });
         });
@@ -154,17 +161,20 @@ function startGame() {
         addListenerHitBox();
         console.log(state.values.result);
     }
-    init();
+
 }
 
 function endGame(msg, result) {
-    meuRecord = meuRecord + result;
-    game.popup.style.display = "flex";
-    game.menu.classList.add("menu");
+
+    if (result >= game.value.meuRecord) {
+        game.value.meuRecord = result;
+    }
+
+    game.view.popup.style.display = "flex";
+    game.view.menu.classList.add("menu");
     let pElement = document.createElement("p");
     pElement.textContent = `${msg}!`;
-    game.h1Element.appendChild(pElement);
-    point.textContent = result;
-    record.textContent = meuRecord;
-
+    game.view.h1Element.appendChild(pElement);
+    game.view.score.textContent = result;
+    game.view.record.textContent = game.value.meuRecord;
 }
