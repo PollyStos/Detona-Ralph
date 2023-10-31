@@ -16,6 +16,7 @@ const game = {
         meuRecord: 0,
     }
 }
+
 document.addEventListener("DOMContentLoaded", function () {
 
     game.view.popup.style.display = "flex";
@@ -74,6 +75,8 @@ function startGame() {
     function updateLiveUI() {
         state.view.live.innerHTML = "";
 
+        console.log(state.values.countlive);
+
         for (let i = 0; i < state.values.countlive; i++) {
             const img = document.createElement("img");
             img.src = "./src/images/hart.svg";
@@ -127,16 +130,15 @@ function startGame() {
         let randomNumber = Math.floor(Math.random() * 9);
         let randomSquare = state.view.squares[randomNumber];
         state.values.hitPosition = randomSquare.id;
+        console.log(`state.values.hitPosition ${state.values.hitPosition} randomSquare.id ${randomSquare.id}`);
         randomSquare.classList.add("enemy");
     }
-
 
     function addListenerHitBox() {
         state.view.squares.forEach((square) => {
             square.addEventListener("mousedown", () => {
                 switch (square.id === state.values.hitPosition) {
                     case true:
-                        console.log(`state.values.hitPosition ${state.values.hitPosition} square.id ${square.id} é igual? ${square.id === state.values.hitPosition}`);
                         state.values.result++;
                         state.view.score.textContent = state.values.result;
                         state.values.hitPosition = null;
@@ -156,11 +158,9 @@ function startGame() {
         });
     }
 
-    function init() {
         updateLiveUI();
         addListenerHitBox();
-        console.log(state.values.result);
-    }
+    
 
 }
 
