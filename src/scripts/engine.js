@@ -1,7 +1,3 @@
-let msg = '';
-
-let restart = false;
-
 const game = {
     view: {
         popup: document.getElementById("popup"),
@@ -18,27 +14,14 @@ const game = {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-
     game.view.popup.style.display = "flex";
     game.view.menu.classList.add("menu");
-
-    // Adiciona um ouvinte de eventos para fechar o pop-up quando "Iniciar" é clicado
-    game.view.iniciarLink.addEventListener("click", function (e) {
-        e.preventDefault(); // Impede o link de redirecionar para outra página (comportamento padrão)
-        game.view.popup.style.display = "none";
-        game.view.menu.classList.remove("menu");
-
-        if (game.view.h1Element.querySelector("p")) {
-            game.view.h1Element.removeChild(game.view.h1Element.querySelector("p"));
-        }
-    });
 });
 
 class Game {
     constructor() {
         this.msg = '';
-        // this.speed = 1000;
-        this.meuRecord = 0;
+        this.speed = 1000;
         this.state = {
             view: {
                 squares: document.querySelectorAll(".square"),
@@ -67,16 +50,29 @@ class Game {
         // Adicione um ouvinte de eventos para fechar o pop-up quando "Iniciar" é clicado
         this.view.iniciarLink.addEventListener("click", (e) => {
             e.preventDefault();
+            game.view.popup.style.display = "none";
+            game.view.menu.classList.remove("menu");
+
+            if (game.view.h1Element.querySelector("p")) {
+                game.view.h1Element.removeChild(game.view.h1Element.querySelector("p"));
+            }
+
             this.startGame();
         });
-        
+
     }
 
     resetGame() {
-        // this.speed = 1000;
-        game.value.meuRecord = 0;
-        clearInterval(this.state.actions.timeId);
-        clearInterval(this.state.actions.countDownTimeId);
+        this.speed = 1000;
+        this.saveMeuRecord();
+
+        this.state.values.gameVelocity = 1000;
+        this.state.values.hitPosition = 0;
+        this.state.values.result = 0;
+        this.state.values.currentTime = 60;
+        this.state.values.countlive = 3;
+        this.state.actions.timeId = null;
+        this.state.actions.countDownTimeId = null;
         // Outras variáveis podem ser redefinidas conforme necessário
     }
 
@@ -91,10 +87,14 @@ class Game {
         }
     }
 
+   velocity() {
+        this.speed -= 2;
+        this.state.actions.timeId=null;
+        this.state.actions.timeId = setInterval(this.randomSquare, this.speed);
+    }
+
     updateLiveUI() {
         this.state.view.live.innerHTML = "";
-
-        console.log(this.state.values.countlive);
 
         for (let i = 0; i < this.state.values.countlive; i++) {
             const img = document.createElement("img");
@@ -113,16 +113,13 @@ class Game {
     countDown() {
         this.state.values.currentTime--;
         this.state.view.timeLeft.textContent = this.state.values.currentTime;
-        console.log(`this.state.view.timeLeft.textContent ${this.state.view.timeLeft.textContent}`);
 
         if (this.state.values.currentTime <= 0) {
             clearInterval(this.state.actions.countDownTimeId);
             clearInterval(this.state.actions.timeId);
             this.msg = "Time's Up";
             this.state.view.score.textContent = 0;
-            // state.values.countlive = 3;
-            // speed = 1000;
-            endGame(this.msg, this.state.values.result, this.meuRecord);
+            endGame(this.msg, this.state.values.result);
         }
 
         if (this.state.values.countlive <= 0) {
@@ -130,13 +127,12 @@ class Game {
             clearInterval(this.state.actions.timeId);
             this.msg = "Game over";
             this.state.view.score.textContent = 0;
-            // state.values.countlive = 3;
-            // speed = 1000;
-            endGame(this.msg, this.state.values.result, this.meuRecord);
+
+            endGame(this.msg, this.state.values.result);
         }
-        
+
     }
-    
+
     randomSquare() {
         this.state.view.squares.forEach((square) => {
             square.classList.remove("enemy");
@@ -153,16 +149,20 @@ class Game {
             square.addEventListener("mousedown", () => {
                 switch (square.id === this.state.values.hitPosition) {
                     case true:
+                        console.log("true");
                         this.state.values.result++;
                         this.state.view.score.textContent = this.state.values.result;
+                        this.state.values.countlive = this.state.values.countlive;
                         this.state.values.hitPosition = null;
                         this.state.values.currentTime += 1;
                         this.state.view.squares.forEach((square) => {
                             square.classList.remove("enemy");
                         });
+                        this.velocity();
                         this.playSound("hit");
                         break;
                     case false:
+                        console.log("false");
                         this.state.values.countlive--;
                         this.updateLiveUI();
                         break;
@@ -181,17 +181,14 @@ class Game {
         this.addListenerHitBox();
     }
 }
-function endGame(msg, result, meuRecord) {
-    if (result >= meuRecord) {
-        meuRecord = result;
+function endGame(msg, result) {
+    if (result >= game.value.meuRecord) {
+        game.value.meuRecord = result;
     }
-    game.view.popup = document.getElementById("popup");
-    game.view.h1Element = document.querySelector(".title");
-    game.view.score = document.querySelector("#score");
-    game.view.record = document.querySelector("#record");
-    popup.style.display = "flex";
-    h1Element.innerHTML = `<p>${msg}!</p>`;
-    score.textContent = result;
-    record.textContent = meuRecord;
+    
+    game.view.popup.style.display = "flex";
+    game.view.h1Element.innerHTML = `<p>${msg}!</p>`;
+    game.view.score.textContent = result;
+    game.view.record.textContent =  game.value.meuRecord;
 }
 const newGame = new Game();
