@@ -80,13 +80,6 @@ class Game {
         localStorage.setItem('meuRecord', game.value.meuRecord);
     }
 
-    loadMeuRecord() {
-        const record = localStorage.getItem('meuRecord');
-        if (record) {
-            game.value.meuRecord = parseInt(record);
-        }
-    }
-
    velocity() {
         this.speed -= 2;
         this.state.actions.timeId=null;
@@ -173,7 +166,7 @@ class Game {
 
     startGame() {
         this.resetGame();
-        this.loadMeuRecord();
+        
         // Inicialize o jogo
         this.state.actions.timeId = setInterval(this.randomSquare.bind(this), 1000);
         this.state.actions.countDownTimeId = setInterval(this.countDown.bind(this), 1000);
