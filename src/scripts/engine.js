@@ -31,150 +31,167 @@ document.addEventListener("DOMContentLoaded", function () {
         if (game.view.h1Element.querySelector("p")) {
             game.view.h1Element.removeChild(game.view.h1Element.querySelector("p"));
         }
-        startGame();
     });
 });
 
-// Adiciona um ouvinte de eventos para abrir o pop-up
-// openButton.addEventListener("click", () => {
-//     game.popup.style.display = "flex";
-// });
+class Game {
+    constructor() {
+        this.msg = '';
+        // this.speed = 1000;
+        this.meuRecord = 0;
+        this.state = {
+            view: {
+                squares: document.querySelectorAll(".square"),
+                enemy: document.querySelector(".enemy"),
+                timeLeft: document.querySelector("#time-left"),
+                score: document.querySelector("#score"),
+                live: document.querySelector("#lives-container"),
+            },
+            values: {
+                gameVelocity: 1000,
+                hitPosition: 0,
+                result: 0,
+                currentTime: 60,
+                countlive: 3,
+            },
+            actions: {
+                timeId: null,
+                countDownTimeId: null,
+            }
+        };
 
-// Adiciona um ouvinte de eventos para fechar o pop-up
-// popup.addEventListener("click", (e) => {
-//     if (e.target === popup) {
-//         game.popup.style.display = "none";
-//     }
-// });
+        this.view = {
+            iniciarLink: document.querySelector("#start"),
+        };
 
+        // Adicione um ouvinte de eventos para fechar o pop-up quando "Iniciar" é clicado
+        this.view.iniciarLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            this.startGame();
+        });
+        
+    }
 
-// let speed = 1000;
+    resetGame() {
+        // this.speed = 1000;
+        game.value.meuRecord = 0;
+        clearInterval(this.state.actions.timeId);
+        clearInterval(this.state.actions.countDownTimeId);
+        // Outras variáveis podem ser redefinidas conforme necessário
+    }
 
-function startGame() {
-    const state = {
-        view: {
-            squares: document.querySelectorAll(".square"),
-            enemy: document.querySelector(".enemy"),
-            timeLeft: document.querySelector("#time-left"),
-            score: document.querySelector("#score"),
-            live: document.querySelector("#lives-container"),
-        },
-        values: {
-            gameVelocity: 1000,
-            hitPosition: 0,
-            result: 0,
-            currentTime: 60,
-            countlive: 3,
-        },
-        actions: {
-            timeId: setInterval(randomSquare, 1000),
-            countDownTimeId: setInterval(countDown, 1000),
+    saveMeuRecord() {
+        localStorage.setItem('meuRecord', game.value.meuRecord);
+    }
+
+    loadMeuRecord() {
+        const record = localStorage.getItem('meuRecord');
+        if (record) {
+            game.value.meuRecord = parseInt(record);
         }
-    };
+    }
 
-    function updateLiveUI() {
-        state.view.live.innerHTML = "";
+    updateLiveUI() {
+        this.state.view.live.innerHTML = "";
 
-        console.log(state.values.countlive);
+        console.log(this.state.values.countlive);
 
-        for (let i = 0; i < state.values.countlive; i++) {
+        for (let i = 0; i < this.state.values.countlive; i++) {
             const img = document.createElement("img");
             img.src = "./src/images/hart.svg";
             img.alt = "vidas";
-            state.view.live.appendChild(img);
+            this.state.view.live.appendChild(img);
         }
     }
 
-    function velocity() {
-        speed -= 2;
-        clearInterval(state.actions.timeId);
-        state.actions.timeId = setInterval(randomSquare, speed);
-    }
-
-    function playSound(audioName) {
+    playSound(audioName) {
         let audio = new Audio(`/src/sounds/${audioName}.m4a`);
         audio.volume = 0.2;
         audio.play();
     }
 
-    function countDown() {
-        state.values.currentTime--;
-        state.view.timeLeft.textContent = state.values.currentTime;
+    countDown() {
+        this.state.values.currentTime--;
+        this.state.view.timeLeft.textContent = this.state.values.currentTime;
+        console.log(`this.state.view.timeLeft.textContent ${this.state.view.timeLeft.textContent}`);
 
-        if (state.values.currentTime <= 0) {
-            clearInterval(state.actions.countDownTimeId);
-            clearInterval(state.actions.timeId);
-            msg = "Time's Up";
-            state.view.score.textContent = 0;
+        if (this.state.values.currentTime <= 0) {
+            clearInterval(this.state.actions.countDownTimeId);
+            clearInterval(this.state.actions.timeId);
+            this.msg = "Time's Up";
+            this.state.view.score.textContent = 0;
             // state.values.countlive = 3;
             // speed = 1000;
-            endGame(msg, state.values.result);
+            endGame(this.msg, this.state.values.result, this.meuRecord);
         }
 
-        if (state.values.countlive <= 0) {
-            clearInterval(state.actions.countDownTimeId);
-            clearInterval(state.actions.timeId);
-            msg = "Game over";
-            state.view.score.textContent = 0;
+        if (this.state.values.countlive <= 0) {
+            clearInterval(this.state.actions.countDownTimeId);
+            clearInterval(this.state.actions.timeId);
+            this.msg = "Game over";
+            this.state.view.score.textContent = 0;
             // state.values.countlive = 3;
             // speed = 1000;
-            endGame(msg, state.values.result);
+            endGame(this.msg, this.state.values.result, this.meuRecord);
         }
+        
     }
-
-    function randomSquare() {
-        state.view.squares.forEach((square) => {
+    
+    randomSquare() {
+        this.state.view.squares.forEach((square) => {
             square.classList.remove("enemy");
         });
 
         let randomNumber = Math.floor(Math.random() * 9);
-        let randomSquare = state.view.squares[randomNumber];
-        state.values.hitPosition = randomSquare.id;
-        console.log(`state.values.hitPosition ${state.values.hitPosition} randomSquare.id ${randomSquare.id}`);
+        let randomSquare = this.state.view.squares[randomNumber];
+        this.state.values.hitPosition = randomSquare.id;
         randomSquare.classList.add("enemy");
     }
 
-    function addListenerHitBox() {
-        state.view.squares.forEach((square) => {
+    addListenerHitBox() {
+        this.state.view.squares.forEach((square) => {
             square.addEventListener("mousedown", () => {
-                switch (square.id === state.values.hitPosition) {
+                switch (square.id === this.state.values.hitPosition) {
                     case true:
-                        state.values.result++;
-                        state.view.score.textContent = state.values.result;
-                        state.values.hitPosition = null;
-                        state.values.currentTime += 1;
-                        state.view.squares.forEach((square) => {
+                        this.state.values.result++;
+                        this.state.view.score.textContent = this.state.values.result;
+                        this.state.values.hitPosition = null;
+                        this.state.values.currentTime += 1;
+                        this.state.view.squares.forEach((square) => {
                             square.classList.remove("enemy");
                         });
-                        playSound("hit");
-                        console.log(`state.values.countlive-- ${state.values.countlive--} `);
+                        this.playSound("hit");
                         break;
-                    case false:    // velocity();
-                        state.values.countlive--;
-                        updateLiveUI();
+                    case false:
+                        this.state.values.countlive--;
+                        this.updateLiveUI();
                         break;
                 }
             });
         });
     }
 
-        updateLiveUI();
-        addListenerHitBox();
-    
-
-}
-
-function endGame(msg, result) {
-
-    if (result >= game.value.meuRecord) {
-        game.value.meuRecord = result;
+    startGame() {
+        this.resetGame();
+        this.loadMeuRecord();
+        // Inicialize o jogo
+        this.state.actions.timeId = setInterval(this.randomSquare.bind(this), 1000);
+        this.state.actions.countDownTimeId = setInterval(this.countDown.bind(this), 1000);
+        this.updateLiveUI();
+        this.addListenerHitBox();
     }
-
-    game.view.popup.style.display = "flex";
-    game.view.menu.classList.add("menu");
-    let pElement = document.createElement("p");
-    pElement.textContent = `${msg}!`;
-    game.view.h1Element.appendChild(pElement);
-    game.view.score.textContent = result;
-    game.view.record.textContent = game.value.meuRecord;
 }
+function endGame(msg, result, meuRecord) {
+    if (result >= meuRecord) {
+        meuRecord = result;
+    }
+    game.view.popup = document.getElementById("popup");
+    game.view.h1Element = document.querySelector(".title");
+    game.view.score = document.querySelector("#score");
+    game.view.record = document.querySelector("#record");
+    popup.style.display = "flex";
+    h1Element.innerHTML = `<p>${msg}!</p>`;
+    score.textContent = result;
+    record.textContent = meuRecord;
+}
+const newGame = new Game();
