@@ -7,10 +7,11 @@ const game = {
         openButton: document.getElementById("openPopup"),
         score: document.getElementById("point"),
         record: document.getElementById("record"),
-    },
-    value: {
-        meuRecord: 0,
     }
+    // ,
+    // value: {
+    //     meuRecord: 0,
+    // }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -56,29 +57,14 @@ class Game {
             if (game.view.h1Element.querySelector("p")) {
                 game.view.h1Element.removeChild(game.view.h1Element.querySelector("p"));
             }
-
             this.startGame();
         });
 
     }
 
-    resetGame() {
-        this.speed = 1000;
-        this.saveMeuRecord();
-
-        this.state.values.gameVelocity = 1000;
-        this.state.values.hitPosition = 0;
-        this.state.values.result = 0;
-        this.state.values.currentTime = 60;
-        this.state.values.countlive = 3;
-        this.state.actions.timeId = null;
-        this.state.actions.countDownTimeId = null;
-        // Outras variáveis podem ser redefinidas conforme necessário
-    }
-
-    saveMeuRecord() {
-        localStorage.setItem('meuRecord', game.value.meuRecord);
-    }
+    // saveMeuRecord() {
+    //     localStorage.setItem('meuRecord', game.value.meuRecord);
+    // }
 
    velocity() {
         this.speed -= 2;
@@ -164,9 +150,7 @@ class Game {
         });
     }
 
-    startGame() {
-        this.resetGame();
-        
+    startGame() {        
         // Inicialize o jogo
         this.state.actions.timeId = setInterval(this.randomSquare.bind(this), 1000);
         this.state.actions.countDownTimeId = setInterval(this.countDown.bind(this), 1000);
@@ -175,13 +159,14 @@ class Game {
     }
 }
 function endGame(msg, result) {
-    if (result >= game.value.meuRecord) {
-        game.value.meuRecord = result;
-    }
+//     if (result >= game.value.meuRecord) {
+//         game.value.meuRecord = result;
+//     }
     
     game.view.popup.style.display = "flex";
     game.view.h1Element.innerHTML = `<p>${msg}!</p>`;
     game.view.score.textContent = result;
-    game.view.record.textContent =  game.value.meuRecord;
+    // game.view.record.textContent =  game.value.meuRecord;
+     window.location.reload();
 }
 const newGame = new Game();
